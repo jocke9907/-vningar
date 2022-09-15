@@ -13,14 +13,19 @@ namespace Project1
         Texture2D boll;
         Vector2 pos1 = Vector2.Zero;
         Vector2 pos2 = new Vector2(100, 100);
-        Texture2D mauTranstex;
+        Texture2D tex;
         //Vector2 posA;
         //Vector2 posB;
         //Vector2 posC;
         int stopX;
         int stopY;
-        Random rnd;
+        
         List<Vector2> posList; //Deklarerar en lista åt mina pos
+        //Ghost ghost;
+
+        List<Ghost> ghostlist;
+        Random rnd;
+
 
 
 
@@ -43,48 +48,89 @@ namespace Project1
 
         protected override void LoadContent()
         {
+            Texture2D tex = Content.Load<Texture2D>("mau_logo_trans");
+            stopX = Window.ClientBounds.X - tex.Width;
+            stopY = Window.ClientBounds.Y - tex.Height;
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            // TODO: use this.Content to load your game content here
-            rnd = new Random();
-            posList = new List<Vector2>();
-            boll = Content.Load<Texture2D>(@"ball");
-            mauTranstex = Content.Load<Texture2D>("mau_logo_trans");
-
-            pos2.X = Window.ClientBounds.Width / 2 - mauTranstex.Width / 2;
-            pos2.Y = Window.ClientBounds.Height / 2 - mauTranstex.Height / 2;
-            stopX = Window.ClientBounds.Width - mauTranstex.Width;
-            stopY= Window.ClientBounds.Height - mauTranstex.Height;
-            for (int i = 0; i < 3; i++)
+            rnd=new Random();
+            ghostlist = new List<Ghost>();
+            for (int i = 0; i < 100; i++) // hur många man ska spawna. nu spawnar den 100 logor
             {
-                int randX = rnd.Next(0,stopX);
-                int randY = rnd.Next(0, stopX);
-                Vector2 pos = new Vector2(randX,randY);
-                posList.Add(pos);
+                
+                int randX = rnd.Next(0, stopX);
+                int randY = rnd.Next(0, stopY);
+                Vector2 pos = new Vector2(randX, randY);
+                Ghost ghost1 = new Ghost(tex, pos, stopX, stopY);
+                ghostlist.Add(ghost1);
             }
 
-           
+
+
             
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             
-            //int randX = rnd.Next(0, stopX);
-            //int randY = rnd.Next(0,stopY);
-            //posA = new Vector2(randX,randY);
+                
+                //Vector2 pos1 = Vector2.Zero;
 
-            //randX = rnd.Next(0,stopX);
-            //randY = rnd.Next(0, stopY);
-            //posB = new Vector2(randX, randY);
+                //ghost = new Ghost(mauTranstex, pos1, stopX, stopY);
+                //posList = new List<Vector2>();
+                //boll = Content.Load<Texture2D>(@"ball");
 
-            //randX=rnd.Next(0,stopX);
-            //randY=rnd.Next(0,stopY);
-            //posC = new Vector2(randX,randY);
 
-            //mauTranstex=Content.Load<Texture2D>
+                //pos2.X = Window.ClientBounds.Width / 2 - mauTranstex.Width / 2;
+                //pos2.Y = Window.ClientBounds.Height / 2 - mauTranstex.Height / 2;
+                //stopX = Window.ClientBounds.Width - mauTranstex.Width;
+                //stopY= Window.ClientBounds.Height - mauTranstex.Height;
+                //for (int i = 0; i < 3; i++)
+                //{
+                //    int randX = rnd.Next(0,stopX);
+                //    int randY = rnd.Next(0, stopX);
+                //    Vector2 pos = new Vector2(randX,randY);
+                //    posList.Add(pos);
+                //}
+
+
+
+
+                //int randX = rnd.Next(0, stopX);
+                //int randY = rnd.Next(0,stopY);
+                //posA = new Vector2(randX,randY);
+
+                //randX = rnd.Next(0,stopX);
+                //randY = rnd.Next(0, stopY);
+                //posB = new Vector2(randX, randY);
+
+                //randX=rnd.Next(0,stopX);
+                //randY=rnd.Next(0,stopY);
+                //posC = new Vector2(randX,randY);
+
+                //mauTranstex=Content.Load<Texture2D>
         }
 
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
+
+            foreach (Ghost ghost in ghostlist)
+            {
+                ghost.Update();
+            }
 
             // pos1.X = pos1.X + 3;
             ////pos2.X = pos2.X + 1;
@@ -110,24 +156,30 @@ namespace Project1
         {
 
             GraphicsDevice.Clear(Color.CornflowerBlue);
-
-            // TODO: Add your drawing code here
             spriteBatch.Begin();
+            foreach (Ghost ghost in ghostlist)
+            {
+                ghost.Draw(spriteBatch);
+            }
+
+            
+            
+            
             //spriteBatch.Draw(boll, pos1, null, Color.White, 0f, Vector2.Zero, 1f, SpriteEffects.FlipHorizontally, 0f);
             //spriteBatch.Draw(mauTranstex, pos2, Color.White);
             
             //spriteBatch.Draw(mauTranstex, posA, Color.White);
             //spriteBatch.Draw(mauTranstex, posB, Color.Lavender);
             //spriteBatch.Draw(mauTranstex, posC, Color.Salmon);
-            foreach (var pos in posList)
-            {
-                spriteBatch.Draw(mauTranstex, pos, Color.WhiteSmoke);
+            //foreach (var pos in posList)
+            //{
+            //    spriteBatch.Draw(mauTranstex, pos, Color.WhiteSmoke);
                
 
-            }
+            //}
+            
+
             spriteBatch.End();
-
-
             base.Draw(gameTime);
         }
     }
